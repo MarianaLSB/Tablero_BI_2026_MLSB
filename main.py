@@ -1,6 +1,6 @@
 # Sección de importación de módulos
 from Modules.UI.header import show_header
-from Modules.DATA.ecobici_service import EcobiciService
+from Modules.Data.ecobici_service import EcobiciService
 import streamlit as st
 import pandas as pd
 
