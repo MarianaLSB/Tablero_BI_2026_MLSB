@@ -55,7 +55,7 @@ class EcobiciViz:
         )
 
         # Aumentar tamaño de los círculos
-        fig.update_traces(marker=dict(size=12))
+        fig.update_traces(marker=dict(size=8))
 
         # 5. Marcador especial para la estación seleccionada
         if seleccion != "Todas":
