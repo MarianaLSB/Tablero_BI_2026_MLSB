@@ -14,4 +14,4 @@ df = ecobici.get_full_data()
 
 # Visualización con Plotly
 viz = EcobiciViz()
-viz.render_map(df)
+viz.viz.render_dashboard(df)
