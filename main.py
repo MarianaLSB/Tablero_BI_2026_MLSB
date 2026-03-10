@@ -11,4 +11,6 @@ ecobici = EcobiciService()
 # Cargar datos
 df = ecobici.get_full_data()
 
-st.write(df())
+# Visualzación con Plotly
+viz = EcobiciViz()
+viz.render_map(df)
