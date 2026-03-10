@@ -1,9 +1,46 @@
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
+import matplotlib.pyplot as plt
+from pywaffle import Waffle
 
 
 class EcobiciViz:
+
+    def render_waffle(self, df):
+        bikes_available  = int(df['num_bikes_available'].sum())
+        bikes_disabled   = int(df['num_bikes_disabled'].sum())
+        docks_available  = int(df['num_docks_available'].sum())
+        docks_disabled   = int(df['num_docks_disabled'].sum())
+
+        fig = plt.figure(
+            FigureClass=Waffle,
+            rows=10,
+            values={
+                'Bicis disponibles' : bikes_available,
+                'Bicis dañadas'     : bikes_disabled,
+                'Puertos disponibles': docks_available,
+                'Puertos dañados'   : docks_disabled,
+            },
+            colors=['#2ecc71', '#e74c3c', '#3498db', '#e67e22'],
+            icons='bicycle',
+            icon_size=14,
+            icon_legend=True,
+            legend={
+                'loc'           : 'upper left',
+                'bbox_to_anchor': (0, -0.1),
+                'ncol'          : 2,
+                'fontsize'      : 9,
+            },
+            figsize=(6, 6),
+            title={
+                'label'   : 'Estado de bicis y puertos',
+                'loc'     : 'center',
+                'fontsize': 13,
+            }
+        )
+        st.pyplot(fig)
+        plt.close(fig)
 
     def render_map(self, df):
         st.subheader("Mapa de Estaciones EcoBici")
@@ -55,7 +92,7 @@ class EcobiciViz:
         )
 
         # Aumentar tamaño de los círculos
-        fig.update_traces(marker=dict(size=8))
+        fig.update_traces(marker=dict(size=12))
 
         # 5. Marcador especial para la estación seleccionada
         if seleccion != "Todas":
@@ -72,3 +109,10 @@ class EcobiciViz:
 
         fig.update_layout(mapbox_style="open-street-map")
         st.plotly_chart(fig, use_container_width=True)
+
+    def render_dashboard(self, df):
+        col_mapa, col_waffle = st.columns([2, 1])
+        with col_mapa:
+            self.render_map(df)
+        with col_waffle:
+            self.render_waffle(df)
