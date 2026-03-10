@@ -4,7 +4,6 @@ from Modules.Data.ecobici_service import EcobiciService
 from Modules.Viz.viz_service import EcobiciViz
 import streamlit as st
 import pandas as pd
-from pywaffle import Waffle
 
 # Sección para crear la GUI
 show_header("Mi primera GUI en Streamlit")
