@@ -117,3 +117,33 @@ class EcobiciViz:
             self.render_map(df, seleccion, nivel_zoom)
         with col_waffle:
             self.render_waffle(df)
+
+
+    def render_top_vacias(self, df):
+    st.subheader("🔴 Top 10 estaciones más vacías")
+    top = (df[['name', 'num_bikes_available', 'num_docks_available']]
+           .sort_values('num_bikes_available')
+           .head(10))
+    fig = px.bar(
+        top,
+        x='num_bikes_available',
+        y='name',
+        orientation='h',
+        color='num_bikes_available',
+        color_continuous_scale='RdYlGn',
+        labels={'num_bikes_available': 'Bicis disponibles', 'name': 'Estación'},
+        height=400,
+    )
+    fig.update_layout(showlegend=False, coloraxis_showscale=False)
+    st.plotly_chart(fig, use_container_width=True)
+
+    def render_tabla(self, df):
+        st.subheader("📋 Detalle por estación")
+        busqueda = st.text_input("Buscar estación:", "")
+        tabla = df[['name', 'num_bikes_available', 'num_bikes_disabled',
+                    'num_docks_available', 'num_docks_disabled']].copy()
+        tabla.columns = ['Estación', 'Bicis disp.', 'Bicis dañadas',
+                         'Puertos disp.', 'Puertos dañados']
+        if busqueda:
+            tabla = tabla[tabla['Estación'].str.contains(busqueda, case=False)]
+        st.dataframe(tabla, use_container_width=True)
