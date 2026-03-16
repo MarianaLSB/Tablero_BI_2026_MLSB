@@ -29,9 +29,13 @@ class EcobiciViz:
     
         fig, ax = plt.subplots(figsize=(4, 4))
         for idx, celda in enumerate(grilla):
-            fila = idx // 10
-            col  = idx % 10
-            ax.text(col + 0.45, 9 - fila + 0.45, '🚲', ha='center', va='center', fontsize=14, color=colores[celda])
+        fila = idx // 10
+        col  = idx % 10
+        # Fondo de color
+        ax.add_patch(plt.Rectangle((col, 9 - fila), 0.9, 0.9, 
+                                    color=colores[celda], alpha=0.4))
+        # Emoji encima
+        ax.text(col + 0.45, 9 - fila + 0.45, '🚲', ha='center', va='center', fontsize=11)
     
         ax.set_xlim(0, 10)
         ax.set_ylim(0, 10)
