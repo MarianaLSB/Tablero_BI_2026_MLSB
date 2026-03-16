@@ -108,26 +108,26 @@ class EcobiciViz:
         st.plotly_chart(fig, use_container_width=True)
 
     def render_top_vacias(self, df):
-        st.subheader("Top 10 estaciones más vacías")
+        st.subheader("🔴 Top 10 estaciones más vacías")
         top = (df[['name', 'num_bikes_available']]
                .sort_values('num_bikes_available')
                .head(10)
                .copy())
-        top['num_bikes_available'] = top['num_bikes_available'].clip(lower=0)
-        top['color'] = top['num_bikes_available'].apply(
+        top['display'] = top['num_bikes_available'].apply(lambda x: 0.1 if x == 0 else x)
+        top['etiqueta'] = top['num_bikes_available'].apply(
             lambda x: '🔴 Vacía' if x == 0 else '🟡 Casi vacía'
         )
         fig = px.bar(
             top,
-            x='num_bikes_available',
+            x='display',
             y='name',
             orientation='h',
-            color='color',
+            color='etiqueta',
             color_discrete_map={'🔴 Vacía': '#e74c3c', '🟡 Casi vacía': '#f39c12'},
-            labels={'num_bikes_available': 'Bicis disponibles', 'name': 'Estación'},
+            labels={'display': 'Bicis disponibles', 'name': 'Estación'},
             height=400,
         )
-        fig.update_layout(showlegend=True, coloraxis_showscale=False)
+        fig.update_layout(showlegend=True)
         st.plotly_chart(fig, use_container_width=True)
     
     def render_tabla(self, df):
