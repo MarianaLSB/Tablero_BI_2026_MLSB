@@ -31,7 +31,7 @@ class EcobiciViz:
             col  = idx % 10
             ax.add_patch(plt.Rectangle((col, 9 - fila), 0.9, 0.9,
                                         color=colores[celda], alpha=0.4))
-            ax.text(col + 0.45, 9 - fila + 0.45, page_icon="🚲",
+            ax.text(col + 0.45, 9 - fila + 0.45, "🚲",
                     ha='center', va='center', fontsize=11)
 
         ax.set_xlim(0, 10)
@@ -108,22 +108,27 @@ class EcobiciViz:
         st.plotly_chart(fig, use_container_width=True)
 
     def render_top_vacias(self, df):
-        st.subheader("Top 10 estaciones más vacías")
-        top = (df[['name', 'num_bikes_available', 'num_docks_available']]
+        st.subheader("🔴 Top 10 estaciones más vacías")
+        top = (df[['name', 'num_bikes_available']]
                .sort_values('num_bikes_available')
-               .head(10))
+               .head(10)
+               .copy())
+        top['num_bikes_available'] = top['num_bikes_available'].clip(lower=0)
+        top['color'] = top['num_bikes_available'].apply(
+            lambda x: '🔴 Vacía' if x == 0 else '🟡 Casi vacía'
+        )
         fig = px.bar(
             top,
             x='num_bikes_available',
             y='name',
             orientation='h',
-            color='num_bikes_available',
-            color_continuous_scale='RdYlGn',
+            color='color',
+            color_discrete_map={'🔴 Vacía': '#e74c3c', '🟡 Casi vacía': '#f39c12'},
             labels={'num_bikes_available': 'Bicis disponibles', 'name': 'Estación'},
             height=400,
         )
-        fig.update_layout(showlegend=False, coloraxis_showscale=False)
-        st.plotly_chart(fig, use_container_width=True)
+        fig.update_layout(showlegend=True, coloraxis_showscale=False)
+        st.plotly_chart(fig, use_container_width=True) Sonnet 4.6
 
     def render_tabla(self, df):
         st.subheader("📋 Detalle por estación")
