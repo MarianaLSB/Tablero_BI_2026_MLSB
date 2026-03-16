@@ -107,39 +107,23 @@ class EcobiciViz:
         )
         st.plotly_chart(fig, use_container_width=True)
 
-    def render_dashboard(self, df):
-        estaciones = ["Todas"] + sorted(df['name'].unique().tolist())
-        seleccion  = st.selectbox("Busca y selecciona una estación:", estaciones)
-        nivel_zoom = st.slider("Nivel de zoom", min_value=1, max_value=4, value=1)
-
-        col_mapa, col_waffle = st.columns([2, 1])
-        with col_mapa:
-            self.render_map(df, seleccion, nivel_zoom)
-        with col_waffle:
-            self.render_waffle(df)
-            st.divider()
-            self.render_top_vacias(df)
-            st.divider()
-            self.render_tabla(df)
-
-
     def render_top_vacias(self, df):
-    st.subheader("🔴 Top 10 estaciones más vacías")
-    top = (df[['name', 'num_bikes_available', 'num_docks_available']]
-           .sort_values('num_bikes_available')
-           .head(10))
-    fig = px.bar(
-        top,
-        x='num_bikes_available',
-        y='name',
-        orientation='h',
-        color='num_bikes_available',
-        color_continuous_scale='RdYlGn',
-        labels={'num_bikes_available': 'Bicis disponibles', 'name': 'Estación'},
-        height=400,
-    )
-    fig.update_layout(showlegend=False, coloraxis_showscale=False)
-    st.plotly_chart(fig, use_container_width=True)
+        st.subheader("🔴 Top 10 estaciones más vacías")
+        top = (df[['name', 'num_bikes_available', 'num_docks_available']]
+               .sort_values('num_bikes_available')
+               .head(10))
+        fig = px.bar(
+            top,
+            x='num_bikes_available',
+            y='name',
+            orientation='h',
+            color='num_bikes_available',
+            color_continuous_scale='RdYlGn',
+            labels={'num_bikes_available': 'Bicis disponibles', 'name': 'Estación'},
+            height=400,
+        )
+        fig.update_layout(showlegend=False, coloraxis_showscale=False)
+        st.plotly_chart(fig, use_container_width=True)
 
     def render_tabla(self, df):
         st.subheader("📋 Detalle por estación")
@@ -151,3 +135,19 @@ class EcobiciViz:
         if busqueda:
             tabla = tabla[tabla['Estación'].str.contains(busqueda, case=False)]
         st.dataframe(tabla, use_container_width=True)
+
+    def render_dashboard(self, df):
+        estaciones = ["Todas"] + sorted(df['name'].unique().tolist())
+        seleccion  = st.selectbox("Busca y selecciona una estación:", estaciones)
+        nivel_zoom = st.slider("Nivel de zoom", min_value=1, max_value=4, value=1)
+
+        col_mapa, col_waffle = st.columns([2, 1])
+        with col_mapa:
+            self.render_map(df, seleccion, nivel_zoom)
+        with col_waffle:
+            self.render_waffle(df)
+
+        st.divider()
+        self.render_top_vacias(df)
+        st.divider()
+        self.render_tabla(df)
