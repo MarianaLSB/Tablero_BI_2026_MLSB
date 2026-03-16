@@ -52,12 +52,12 @@ class EcobiciViz:
         """, unsafe_allow_html=True)
     
     def render_map(self, df, seleccion, nivel_zoom):
-        df = df.copy()  # <- agrega esta línea
+        df = df.copy()
         st.subheader("Mapa de Estaciones EcoBici")
-
+    
         zoom_map = {1: 11, 2: 13, 3: 15, 4: 17}
         zoom_val = zoom_map[nivel_zoom]
-
+    
         if seleccion != "Todas":
             punto = df[df['name'] == seleccion].iloc[0]
             df['resultado'] = df['name'].apply(lambda x: 'Seleccionada' if x == seleccion else 'Normal')
@@ -68,22 +68,22 @@ class EcobiciViz:
         else:
             df['resultado'] = 'Normal'
             color_map = {"Normal": "#1f7fb4"}
-            df['tamano_marker'] = 10
+            df['tamano_marker'] = [10] * len(df)
             lat_center = df['lat'].mean()
             lon_center = df['lon'].mean()
-
+    
         fig = px.scatter_mapbox(
             df,
             lat="lat",
             lon="lon",
             hover_name="name",
             hover_data={
-            "lat": False,
-            "lon": False,
-            "num_bikes_available": True,
-            "num_docks_available": True,
-            "resultado": False,
-            "tamano_marker": False,
+                "lat": False,
+                "lon": False,
+                "num_bikes_available": True,
+                "num_docks_available": True,
+                "resultado": False,
+                "tamano_marker": False,
             },
             color="resultado",
             color_discrete_map=color_map,
@@ -93,7 +93,7 @@ class EcobiciViz:
             center={"lat": lat_center, "lon": lon_center},
             height=600,
         )
-
+    
         if seleccion != "Todas":
             fig.add_trace(go.Scattermapbox(
                 lat=[punto['lat']],
@@ -104,7 +104,7 @@ class EcobiciViz:
                 textposition='top right',
                 name='Estación seleccionada'
             ))
-
+    
         fig.update_layout(
             mapbox_style="carto-positron",
             margin={"r": 0, "t": 0, "l": 0, "b": 0},
