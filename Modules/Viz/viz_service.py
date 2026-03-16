@@ -8,10 +8,10 @@ from pywaffle import Waffle
 class EcobiciViz:
 
     def render_waffle(self, df):
-        bikes_available  = int(df['num_bikes_available'].sum())
-        bikes_disabled   = int(df['num_bikes_disabled'].sum())
-        docks_available  = int(df['num_docks_available'].sum())
-        docks_disabled   = int(df['num_docks_disabled'].sum())
+        bikes_available  = max(1, int(df['num_bikes_available'].sum()))
+        bikes_disabled   = max(1, int(df['num_bikes_disabled'].sum()))
+        docks_available  = max(1, int(df['num_docks_available'].sum()))
+        docks_disabled   = max(1, int(df['num_docks_disabled'].sum()))
     
         fig = plt.figure(
         FigureClass=Waffle,
