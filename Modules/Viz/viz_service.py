@@ -11,40 +11,42 @@ class EcobiciViz:
         bikes_disabled  = max(1, int(df['num_bikes_disabled'].sum()))
         docks_available = max(1, int(df['num_docks_available'].sum()))
         docks_disabled  = max(1, int(df['num_docks_disabled'].sum()))
-
-        total      = bikes_available + bikes_disabled + docks_available + docks_disabled
-        categorias = ['Bicis disponibles', 'Bicis dañadas', 'Puertos disponibles', 'Puertos dañados']
-        valores    = [bikes_available, bikes_disabled, docks_available, docks_disabled]
-        colores    = ['#2ecc71', '#e74c3c', '#3498db', '#e67e22']
-
+    
+        total  = bikes_available + bikes_disabled + docks_available + docks_disabled
         celdas = 100
+    
+        categorias = [
+            ('Bicis disp.',    bikes_available, '#2ecc71'),
+            ('Bicis dañadas',  bikes_disabled,  '#e74c3c'),
+            ('Puertos disp.',  docks_available, '#3498db'),
+            ('Puertos dañados',docks_disabled,  '#e67e22'),
+        ]
+    
         grilla = []
-        for i, v in enumerate(valores):
-            grilla += [i] * round(v / total * celdas)
+        for nombre, valor, color in categorias:
+            grilla += [color] * round(valor / total * celdas)
         while len(grilla) < celdas:
-            grilla.append(len(valores) - 1)
+            grilla.append(categorias[-1][2])
         grilla = grilla[:celdas]
-
-        fig, ax = plt.subplots(figsize=(4, 4))
-        for idx, celda in enumerate(grilla):
-            fila = idx // 10
-            col  = idx % 10
-            ax.add_patch(plt.Rectangle((col, 9 - fila), 0.9, 0.9,
-                                        color=colores[celda], alpha=0.4))
-            ax.text(col + 0.45, 9 - fila + 0.45, "🚲",
-                    ha='center', va='center', fontsize=11)
-
-        ax.set_xlim(0, 10)
-        ax.set_ylim(0, 10)
-        ax.axis('off')
-        ax.set_title('Estado de bicis y puertos', fontsize=12)
-
-        handles = [plt.Rectangle((0, 0), 1, 1, color=c) for c in colores]
-        ax.legend(handles, categorias, loc='upper left',
-                  bbox_to_anchor=(0, -0.05), ncol=2, fontsize=8)
-
-        st.pyplot(fig, use_container_width=True)
-        plt.close(fig)
+    
+        iconos = ""
+        for i, color in enumerate(grilla):
+            if i % 10 == 0 and i != 0:
+                iconos += "<br>"
+            iconos += f'<span style="color:{color}; font-size:20px;">🚲</span> '
+    
+        leyenda = ""
+        for nombre, valor, color in categorias:
+            leyenda += f'<span style="color:{color};">⬛</span> {nombre} ({valor})&nbsp;&nbsp;'
+    
+        st.markdown(f"""
+        <div style="background:#1e1e1e; padding:15px; border-radius:10px;">
+            <p style="color:white; text-align:center; font-weight:bold;">Estado de bicis y puertos</p>
+            <div style="line-height:1.8;">{iconos}</div>
+            <br>
+            <div style="font-size:12px; color:white;">{leyenda}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
     def render_map(self, df, seleccion, nivel_zoom):
         st.subheader("Mapa de Estaciones EcoBici")
