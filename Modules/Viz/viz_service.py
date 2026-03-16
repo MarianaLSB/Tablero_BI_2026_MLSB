@@ -108,7 +108,7 @@ class EcobiciViz:
         st.plotly_chart(fig, use_container_width=True)
 
     def render_top_vacias(self, df):
-        st.subheader("🔴 Top 10 estaciones más vacías")
+        st.subheader(f"Top 10 estaciones más vacías ({len(top[top['num_bikes_available']==0])} sin bicis ahorita)")
         top = (df[['name', 'num_bikes_available']]
                .sort_values('num_bikes_available')
                .head(10)
