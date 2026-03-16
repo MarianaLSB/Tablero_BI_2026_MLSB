@@ -23,8 +23,6 @@ class EcobiciViz:
                 'Puertos dañados'   : docks_disabled,
             },
             colors=['#2ecc71', '#e74c3c', '#3498db', '#e67e22'],
-            characters='🚲',
-            font_size=14,
             icon_legend=True,
             legend={
                 'loc'           : 'upper left',
