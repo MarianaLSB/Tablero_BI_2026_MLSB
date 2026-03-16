@@ -32,9 +32,7 @@ class EcobiciViz:
         fila = idx // 10
         col  = idx % 10
         # Fondo de color
-        ax.add_patch(plt.Rectangle((col, 9 - fila), 0.9, 0.9, 
-                                    color=colores[celda], alpha=0.4))
-        # Emoji encima
+        ax.add_patch(plt.Rectangle((col, 9 - fila), 0.9, 0.9, color=colores[celda], alpha=0.4))
         ax.text(col + 0.45, 9 - fila + 0.45, '🚲', ha='center', va='center', fontsize=11)
     
         ax.set_xlim(0, 10)
