@@ -2,23 +2,21 @@ import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 import matplotlib.pyplot as plt
-from pywaffle import Waffle
 
 
 class EcobiciViz:
 
     def render_waffle(self, df):
-        bikes_available  = max(1, int(df['num_bikes_available'].sum()))
-        bikes_disabled   = max(1, int(df['num_bikes_disabled'].sum()))
-        docks_available  = max(1, int(df['num_docks_available'].sum()))
-        docks_disabled   = max(1, int(df['num_docks_disabled'].sum()))
-    
-        total = bikes_available + bikes_disabled + docks_available + docks_disabled
+        bikes_available = max(1, int(df['num_bikes_available'].sum()))
+        bikes_disabled  = max(1, int(df['num_bikes_disabled'].sum()))
+        docks_available = max(1, int(df['num_docks_available'].sum()))
+        docks_disabled  = max(1, int(df['num_docks_disabled'].sum()))
+
+        total      = bikes_available + bikes_disabled + docks_available + docks_disabled
         categorias = ['Bicis disponibles', 'Bicis dañadas', 'Puertos disponibles', 'Puertos dañados']
         valores    = [bikes_available, bikes_disabled, docks_available, docks_disabled]
         colores    = ['#2ecc71', '#e74c3c', '#3498db', '#e67e22']
-    
-        # Crear grilla 10x10
+
         celdas = 100
         grilla = []
         for i, v in enumerate(valores):
@@ -26,24 +24,25 @@ class EcobiciViz:
         while len(grilla) < celdas:
             grilla.append(len(valores) - 1)
         grilla = grilla[:celdas]
-    
+
         fig, ax = plt.subplots(figsize=(4, 4))
         for idx, celda in enumerate(grilla):
-        fila = idx // 10
-        col  = idx % 10
-        # Fondo de color
-        ax.add_patch(plt.Rectangle((col, 9 - fila), 0.9, 0.9, color=colores[celda], alpha=0.4))
-        ax.text(col + 0.45, 9 - fila + 0.45, '🚲', ha='center', va='center', fontsize=11)
-    
+            fila = idx // 10
+            col  = idx % 10
+            ax.add_patch(plt.Rectangle((col, 9 - fila), 0.9, 0.9,
+                                        color=colores[celda], alpha=0.4))
+            ax.text(col + 0.45, 9 - fila + 0.45, '🚲',
+                    ha='center', va='center', fontsize=11)
+
         ax.set_xlim(0, 10)
         ax.set_ylim(0, 10)
         ax.axis('off')
         ax.set_title('Estado de bicis y puertos', fontsize=12)
-    
-        handles = [plt.Rectangle((0,0), 1, 1, color=c) for c in colores]
+
+        handles = [plt.Rectangle((0, 0), 1, 1, color=c) for c in colores]
         ax.legend(handles, categorias, loc='upper left',
                   bbox_to_anchor=(0, -0.05), ncol=2, fontsize=8)
-    
+
         st.pyplot(fig, use_container_width=True)
         plt.close(fig)
 
@@ -85,7 +84,7 @@ class EcobiciViz:
             color="resultado",
             color_discrete_map=color_map,
             size="tamano_marker",
-            size_max= 8,
+            size_max=8,
             zoom=zoom_val,
             center={"lat": lat_center, "lon": lon_center},
             height=600,
@@ -96,7 +95,7 @@ class EcobiciViz:
                 lat=[punto['lat']],
                 lon=[punto['lon']],
                 mode='markers+text',
-                marker=dict(size=10, color='#FF4B4B', symbol='star'),
+                marker=dict(size=20, color='#FF4B4B', symbol='star'),
                 text=[seleccion],
                 textposition='top right',
                 name='Estación seleccionada'
@@ -109,12 +108,10 @@ class EcobiciViz:
         st.plotly_chart(fig, use_container_width=True)
 
     def render_dashboard(self, df):
-        # Widgets FUERA de las columnas
         estaciones = ["Todas"] + sorted(df['name'].unique().tolist())
-        seleccion = st.selectbox("Busca y selecciona una estación:", estaciones)
+        seleccion  = st.selectbox("Busca y selecciona una estación:", estaciones)
         nivel_zoom = st.slider("Nivel de zoom", min_value=1, max_value=4, value=1)
 
-        # Layout de dos columnas
         col_mapa, col_waffle = st.columns([2, 1])
         with col_mapa:
             self.render_map(df, seleccion, nivel_zoom)
