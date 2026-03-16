@@ -31,7 +31,7 @@ class EcobiciViz:
             col  = idx % 10
             ax.add_patch(plt.Rectangle((col, 9 - fila), 0.9, 0.9,
                                         color=colores[celda], alpha=0.4))
-            ax.text(col + 0.45, 9 - fila + 0.45, '🚲',
+            ax.text(col + 0.45, 9 - fila + 0.45, page_icon="🚲",
                     ha='center', va='center', fontsize=11)
 
         ax.set_xlim(0, 10)
@@ -108,7 +108,7 @@ class EcobiciViz:
         st.plotly_chart(fig, use_container_width=True)
 
     def render_top_vacias(self, df):
-        st.subheader("🔴 Top 10 estaciones más vacías")
+        st.subheader("Top 10 estaciones más vacías")
         top = (df[['name', 'num_bikes_available', 'num_docks_available']]
                .sort_values('num_bikes_available')
                .head(10))
