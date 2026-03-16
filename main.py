@@ -5,6 +5,8 @@ from Modules.Viz.viz_service import EcobiciViz
 import streamlit as st
 import pandas as pd
 
+st.cache_data.clear()  
+
 # Sección para crear la GUI
 show_header("Mi primera GUI en Streamlit")
 
