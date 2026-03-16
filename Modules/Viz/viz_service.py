@@ -13,30 +13,35 @@ class EcobiciViz:
         docks_available  = max(1, int(df['num_docks_available'].sum()))
         docks_disabled   = max(1, int(df['num_docks_disabled'].sum()))
     
-        fig = plt.figure(
-        FigureClass=Waffle,
-        rows=10,
-        values={
-            'Bicis disponibles' : bikes_available,
-            'Bicis dañadas'     : bikes_disabled,
-            'Puertos disponibles': docks_available,
-            'Puertos dañados'   : docks_disabled,
-        },
-        colors=['#2ecc71', '#e74c3c', '#3498db', '#e67e22'],
-        icon_legend=True,
-        legend={
-            'loc'           : 'upper left',
-            'bbox_to_anchor': (0, -0.1),
-            'ncol'          : 2,
-            'fontsize'      : 9,
-        },
-        figsize=(4, 4),
-        title={
-            'label'   : 'Estado de bicis y puertos',
-            'loc'     : 'center',
-            'fontsize': 13,
-            }
-        )
+        total = bikes_available + bikes_disabled + docks_available + docks_disabled
+        categorias = ['Bicis disponibles', 'Bicis dañadas', 'Puertos disponibles', 'Puertos dañados']
+        valores    = [bikes_available, bikes_disabled, docks_available, docks_disabled]
+        colores    = ['#2ecc71', '#e74c3c', '#3498db', '#e67e22']
+    
+        # Crear grilla 10x10
+        celdas = 100
+        grilla = []
+        for i, v in enumerate(valores):
+            grilla += [i] * round(v / total * celdas)
+        while len(grilla) < celdas:
+            grilla.append(len(valores) - 1)
+        grilla = grilla[:celdas]
+    
+        fig, ax = plt.subplots(figsize=(4, 4))
+        for idx, celda in enumerate(grilla):
+            fila = idx // 10
+            col  = idx % 10
+            ax.add_patch(plt.Rectangle((col, 9 - fila), 0.9, 0.9, color=colores[celda]))
+    
+        ax.set_xlim(0, 10)
+        ax.set_ylim(0, 10)
+        ax.axis('off')
+        ax.set_title('Estado de bicis y puertos', fontsize=12)
+    
+        handles = [plt.Rectangle((0,0), 1, 1, color=c) for c in colores]
+        ax.legend(handles, categorias, loc='upper left',
+                  bbox_to_anchor=(0, -0.05), ncol=2, fontsize=8)
+    
         st.pyplot(fig, use_container_width=True)
         plt.close(fig)
 
