@@ -117,6 +117,10 @@ class EcobiciViz:
             self.render_map(df, seleccion, nivel_zoom)
         with col_waffle:
             self.render_waffle(df)
+            st.divider()
+            self.render_top_vacias(df)
+            st.divider()
+            self.render_tabla(df)
 
 
     def render_top_vacias(self, df):
