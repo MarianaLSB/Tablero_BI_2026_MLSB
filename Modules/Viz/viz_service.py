@@ -62,13 +62,13 @@ class EcobiciViz:
             punto = df[df['name'] == seleccion].iloc[0]
             df['resultado'] = df['name'].apply(lambda x: 'Seleccionada' if x == seleccion else 'Normal')
             color_map = {"Seleccionada": "#FF4B4B", "Normal": "#1f7fb4"}
-            df['tamano_marker'] = df['name'].apply(lambda x: 25 if x == seleccion else 10)
+            df['tamano_marker'] = df['name'].apply(lambda x: 25 if x == seleccion else 8)
             lat_center = punto['lat'] if nivel_zoom > 1 else df['lat'].mean()
             lon_center = punto['lon'] if nivel_zoom > 1 else df['lon'].mean()
         else:
             df['resultado'] = 'Normal'
             color_map = {"Normal": "#1f7fb4"}
-            df['tamano_marker'] = [10] * len(df)
+            df['tamano_marker'] = [8] * len(df)
             lat_center = df['lat'].mean()
             lon_center = df['lon'].mean()
     
