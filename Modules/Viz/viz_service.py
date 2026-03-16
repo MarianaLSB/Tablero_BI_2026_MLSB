@@ -44,34 +44,33 @@ class EcobiciViz:
 
     def render_map(self, df):
         st.subheader("Mapa de Estaciones EcoBici")
+        st.info("El color representa el % de ocupación (Azul = Lleno, Rojo = Vacío).")
+
+        # Calcular disponibilidad %
+        df['total_cap'] = df['num_bikes_available'] + df['num_docks_available']
+        df['disponibilidad_pct'] = (df['num_bikes_available'] / df['total_cap']).fillna(0) * 100
 
         # 1. Lista desplegable para resaltar estación
         estaciones = ["Todas"] + sorted(df['name'].unique().tolist())
         seleccion = st.selectbox("Busca y selecciona una estación para resaltarla:", estaciones)
 
-        # 2. Slider de zoom (4 niveles, por defecto nivel 1 = sin zoom)
+        # 2. Slider de zoom
         nivel_zoom = st.slider("Nivel de zoom", min_value=1, max_value=4, value=1)
         zoom_map = {1: 11, 2: 13, 3: 15, 4: 17}
         zoom_val = zoom_map[nivel_zoom]
 
-        # 3. Centro del mapa: centroide siempre, solo se acerca si hay slider > 1 y hay selección
+        # 3. Centro del mapa y tamaño de markers
         if seleccion != "Todas":
-            df['resultado'] = df['name'].apply(lambda x: 'Seleccionada' if x == seleccion else 'Normal')
-            color_map = {"Seleccionada": "#FF4B4B", "Normal": "#1f7fb4"}
             punto = df[df['name'] == seleccion].iloc[0]
-            if nivel_zoom > 1:
-                lat_center = punto['lat']
-                lon_center = punto['lon']
-            else:
-                lat_center = df['lat'].mean()
-                lon_center = df['lon'].mean()
+            df['tamano_marker'] = df['name'].apply(lambda x: 25 if x == seleccion else 10)
+            lat_center = punto['lat'] if nivel_zoom > 1 else df['lat'].mean()
+            lon_center = punto['lon'] if nivel_zoom > 1 else df['lon'].mean()
         else:
-            df['resultado'] = 'Normal'
-            color_map = {"Seleccionada": "#FF4B4B", "Normal": "#1f7fb4"}
+            df['tamano_marker'] = 10
             lat_center = df['lat'].mean()
             lon_center = df['lon'].mean()
 
-        # 4. Creación del mapa interactivo con círculos más grandes
+        # 4. Mapa con color por disponibilidad
         fig = px.scatter_mapbox(
             df,
             lat="lat",
@@ -80,23 +79,25 @@ class EcobiciViz:
             hover_data={
                 "lat": False,
                 "lon": False,
-                "capacity": True,
-                "num_bikes_available": True
+                "num_bikes_available": True,
+                "num_bikes_disabled": True,
+                "num_docks_available": True,
+                "num_docks_disabled": True,
+                "disponibilidad_pct": ":.1f",
+                "tamano_marker": False,
             },
-            color="resultado",
-            color_discrete_map=color_map,
+            color="disponibilidad_pct",
+            color_continuous_scale="RdYlBu",
+            size="tamano_marker",
             size_max=18,
             zoom=zoom_val,
             center={"lat": lat_center, "lon": lon_center},
-            height=600
+            height=600,
+            labels={"disponibilidad_pct": "% Bicis"}
         )
 
-        # Aumentar tamaño de los círculos
-        fig.update_traces(marker=dict(size=12))
-
-        # 5. Marcador especial para la estación seleccionada
+        # 5. Marcador estrella para estación seleccionada
         if seleccion != "Todas":
-            punto = df[df['name'] == seleccion].iloc[0]
             fig.add_trace(go.Scattermapbox(
                 lat=[punto['lat']],
                 lon=[punto['lon']],
@@ -107,7 +108,11 @@ class EcobiciViz:
                 name='Estación seleccionada'
             ))
 
-        fig.update_layout(mapbox_style="open-street-map")
+        fig.update_layout(
+            mapbox_style="carto-positron",
+            margin={"r": 0, "t": 0, "l": 0, "b": 0},
+            coloraxis_colorbar=dict(title="% Llenado")
+        )
         st.plotly_chart(fig, use_container_width=True)
 
     def render_dashboard(self, df):
