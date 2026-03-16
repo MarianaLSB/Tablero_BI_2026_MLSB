@@ -35,6 +35,9 @@ class EcobiciService:
 
             # 3. Merge de datos (Usamos merge por station_id para mayor seguridad que concat)
             df_final = pd.merge(df_info, df_status, on='station_id')
+            # Limpiar valores negativos de la API
+            cols_numericas = ['num_bikes_available', 'num_bikes_disabled', 'num_docks_available', 'num_docks_disabled']
+            df_final[cols_numericas] = df_final[cols_numericas].clip(lower=0)
 
             return df_final
 
