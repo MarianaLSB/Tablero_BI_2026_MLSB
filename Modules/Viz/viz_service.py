@@ -99,7 +99,7 @@ class EcobiciViz:
                 lat=[punto['lat']],
                 lon=[punto['lon']],
                 mode='markers+text',
-                marker=dict(size=20, color='#FF4B4B', symbol='star'),
+                marker=dict(size=8, color='#FF4B4B', symbol='star'),
                 text=[seleccion],
                 textposition='top right',
                 name='Estación seleccionada'
