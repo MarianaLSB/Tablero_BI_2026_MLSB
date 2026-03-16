@@ -16,10 +16,10 @@ class EcobiciViz:
         celdas = 100
     
         categorias = [
-            ('Bicis disp.',    bikes_available, '#2ecc71'),
-            ('Bicis dañadas',  bikes_disabled,  '#e74c3c'),
-            ('Puertos disp.',  docks_available, '#3498db'),
-            ('Puertos dañados',docks_disabled,  '#e67e22'),
+            ('Bicis disp.',     bikes_available, '#2ecc71'),
+            ('Bicis dañadas',   bikes_disabled,  '#e74c3c'),
+            ('Puertos disp.',   docks_available, '#3498db'),
+            ('Puertos dañados', docks_disabled,  '#e67e22'),
         ]
     
         grilla = []
@@ -29,11 +29,14 @@ class EcobiciViz:
             grilla.append(categorias[-1][2])
         grilla = grilla[:celdas]
     
-        iconos = ""
-        for i, color in enumerate(grilla):
-            if i % 10 == 0 and i != 0:
-                iconos += "<br>"
-            iconos += f'<span style="color:{color}; font-size:20px;">🚲</span> '
+        filas = ""
+        for fila in range(10):
+            fila_iconos = ""
+            for col in range(10):
+                idx = fila * 10 + col
+                color = grilla[idx]
+                fila_iconos += f'<span style="color:{color}; font-size:20px;">🚲</span>'
+            filas += f'<div style="display:flex; gap:2px;">{fila_iconos}</div>'
     
         leyenda = ""
         for nombre, valor, color in categorias:
@@ -42,12 +45,12 @@ class EcobiciViz:
         st.markdown(f"""
         <div style="background:#1e1e1e; padding:15px; border-radius:10px;">
             <p style="color:white; text-align:center; font-weight:bold;">Estado de bicis y puertos</p>
-            <div style="line-height:1.8;">{iconos}</div>
+            <div>{filas}</div>
             <br>
             <div style="font-size:12px; color:white;">{leyenda}</div>
         </div>
         """, unsafe_allow_html=True)
-
+    
     def render_map(self, df, seleccion, nivel_zoom):
         st.subheader("Mapa de Estaciones EcoBici")
 
