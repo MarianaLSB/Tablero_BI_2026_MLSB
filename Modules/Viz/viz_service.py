@@ -42,19 +42,12 @@ class EcobiciViz:
         st.pyplot(fig)
         plt.close(fig)
 
-    def render_map(self, df):
+    def render_map(self, df, seleccion, nivel_zoom):
         st.subheader("Mapa de Estaciones EcoBici")
 
-        # 1. Lista desplegable para resaltar estación
-        estaciones = ["Todas"] + sorted(df['name'].unique().tolist())
-        seleccion = st.selectbox("Busca y selecciona una estación para resaltarla:", estaciones)
-
-        # 2. Slider de zoom
-        nivel_zoom = st.slider("Nivel de zoom", min_value=1, max_value=4, value=1)
         zoom_map = {1: 11, 2: 13, 3: 15, 4: 17}
         zoom_val = zoom_map[nivel_zoom]
 
-        # 3. Centro del mapa y colores
         if seleccion != "Todas":
             punto = df[df['name'] == seleccion].iloc[0]
             df['resultado'] = df['name'].apply(lambda x: 'Seleccionada' if x == seleccion else 'Normal')
@@ -69,7 +62,6 @@ class EcobiciViz:
             lat_center = df['lat'].mean()
             lon_center = df['lon'].mean()
 
-        # 4. Mapa
         fig = px.scatter_mapbox(
             df,
             lat="lat",
@@ -94,7 +86,6 @@ class EcobiciViz:
             height=600,
         )
 
-        # 5. Marcador estrella para estación seleccionada
         if seleccion != "Todas":
             fig.add_trace(go.Scattermapbox(
                 lat=[punto['lat']],
@@ -113,8 +104,14 @@ class EcobiciViz:
         st.plotly_chart(fig, use_container_width=True)
 
     def render_dashboard(self, df):
+        # Widgets FUERA de las columnas
+        estaciones = ["Todas"] + sorted(df['name'].unique().tolist())
+        seleccion = st.selectbox("Busca y selecciona una estación:", estaciones)
+        nivel_zoom = st.slider("Nivel de zoom", min_value=1, max_value=4, value=1)
+
+        # Layout de dos columnas
         col_mapa, col_waffle = st.columns([2, 1])
         with col_mapa:
-            self.render_map(df)
+            self.render_map(df, seleccion, nivel_zoom)
         with col_waffle:
             self.render_waffle(df)
