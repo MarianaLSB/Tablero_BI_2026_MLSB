@@ -14,27 +14,27 @@ class EcobiciViz:
         docks_disabled   = int(df['num_docks_disabled'].sum())
     
         fig = plt.figure(
-            FigureClass=Waffle,
-            rows=10,
-            values={
-                'Bicis disponibles' : bikes_available,
-                'Bicis dañadas'     : bikes_disabled,
-                'Puertos disponibles': docks_available,
-                'Puertos dañados'   : docks_disabled,
-            },
-            colors=['#2ecc71', '#e74c3c', '#3498db', '#e67e22'],
-            icon_legend=True,
-            legend={
-                'loc'           : 'upper left',
-                'bbox_to_anchor': (0, -0.1),
-                'ncol'          : 2,
-                'fontsize'      : 9,
-            },
-            figsize=(4, 4),
-            title={
-                'label'   : 'Estado de bicis y puertos',
-                'loc'     : 'center',
-                'fontsize': 13,
+        FigureClass=Waffle,
+        rows=10,
+        values={
+            'Bicis disponibles' : bikes_available,
+            'Bicis dañadas'     : bikes_disabled,
+            'Puertos disponibles': docks_available,
+            'Puertos dañados'   : docks_disabled,
+        },
+        colors=['#2ecc71', '#e74c3c', '#3498db', '#e67e22'],
+        icon_legend=True,
+        legend={
+            'loc'           : 'upper left',
+            'bbox_to_anchor': (0, -0.1),
+            'ncol'          : 2,
+            'fontsize'      : 9,
+        },
+        figsize=(4, 4),
+        title={
+            'label'   : 'Estado de bicis y puertos',
+            'loc'     : 'center',
+            'fontsize': 13,
             }
         )
         st.pyplot(fig, use_container_width=True)
