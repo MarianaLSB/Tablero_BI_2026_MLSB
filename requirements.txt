@@ -3,5 +3,5 @@ pandas
 numpy
 matplotlib
 seaborn
-plotly
+plotly==5.18.0
 pywaffle
