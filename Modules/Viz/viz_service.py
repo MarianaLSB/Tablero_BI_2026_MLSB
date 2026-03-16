@@ -31,7 +31,7 @@ class EcobiciViz:
         for idx, celda in enumerate(grilla):
             fila = idx // 10
             col  = idx % 10
-            ax.add_patch(plt.Rectangle((col, 9 - fila), 0.9, 0.9, color=colores[celda]))
+            ax.text(col + 0.45, 9 - fila + 0.45, '🚲', ha='center', va='center', fontsize=14, color=colores[celda])
     
         ax.set_xlim(0, 10)
         ax.set_ylim(0, 10)
