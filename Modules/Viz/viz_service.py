@@ -108,7 +108,7 @@ class EcobiciViz:
         st.plotly_chart(fig, use_container_width=True)
 
     def render_top_vacias(self, df):
-        st.subheader("🔴 Top 10 estaciones más vacías")
+        st.subheader("Top 10 estaciones más vacías")
         top = (df[['name', 'num_bikes_available']]
                .sort_values('num_bikes_available')
                .head(10)
@@ -128,8 +128,8 @@ class EcobiciViz:
             height=400,
         )
         fig.update_layout(showlegend=True, coloraxis_showscale=False)
-        st.plotly_chart(fig, use_container_width=True) Sonnet 4.6
-
+        st.plotly_chart(fig, use_container_width=True)
+    
     def render_tabla(self, df):
         st.subheader("📋 Detalle por estación")
         busqueda = st.text_input("Buscar estación:", "")
