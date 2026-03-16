@@ -80,7 +80,7 @@ class EcobiciViz:
             color="resultado",
             color_discrete_map=color_map,
             size="tamano_marker",
-            size_max=18,
+            size_max=9,
             zoom=zoom_val,
             center={"lat": lat_center, "lon": lon_center},
             height=600,
@@ -91,7 +91,7 @@ class EcobiciViz:
                 lat=[punto['lat']],
                 lon=[punto['lon']],
                 mode='markers+text',
-                marker=dict(size=9, color='#FF4B4B', symbol='star'),
+                marker=dict(size=10, color='#FF4B4B', symbol='star'),
                 text=[seleccion],
                 textposition='top right',
                 name='Estación seleccionada'
