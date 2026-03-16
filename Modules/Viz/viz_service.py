@@ -80,7 +80,7 @@ class EcobiciViz:
             color="resultado",
             color_discrete_map=color_map,
             size="tamano_marker",
-            size_max= 6,
+            size_max= 8,
             zoom=zoom_val,
             center={"lat": lat_center, "lon": lon_center},
             height=600,
