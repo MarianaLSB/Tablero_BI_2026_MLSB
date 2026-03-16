@@ -13,7 +13,6 @@ show_header("Mi primera GUI en Streamlit")
 ecobici = EcobiciService()
 # Cargar datos
 df = ecobici.get_full_data()
-st.write(df[['num_bikes_available', 'num_bikes_disabled', 'num_docks_available', 'num_docks_disabled']].describe())
 
 # Visualización con Plotly
 viz = EcobiciViz()
