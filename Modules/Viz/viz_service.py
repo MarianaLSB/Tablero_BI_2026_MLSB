@@ -12,7 +12,7 @@ class EcobiciViz:
         bikes_disabled   = int(df['num_bikes_disabled'].sum())
         docks_available  = int(df['num_docks_available'].sum())
         docks_disabled   = int(df['num_docks_disabled'].sum())
-
+    
         fig = plt.figure(
             FigureClass=Waffle,
             rows=10,
@@ -32,14 +32,14 @@ class EcobiciViz:
                 'ncol'          : 2,
                 'fontsize'      : 9,
             },
-            figsize=(6, 6),
+            figsize=(4, 4),
             title={
                 'label'   : 'Estado de bicis y puertos',
                 'loc'     : 'center',
                 'fontsize': 13,
             }
         )
-        st.pyplot(fig)
+        st.pyplot(fig, use_container_width=True)
         plt.close(fig)
 
     def render_map(self, df, seleccion, nivel_zoom):
@@ -91,7 +91,7 @@ class EcobiciViz:
                 lat=[punto['lat']],
                 lon=[punto['lon']],
                 mode='markers+text',
-                marker=dict(size=20, color='#FF4B4B', symbol='star'),
+                marker=dict(size=9, color='#FF4B4B', symbol='star'),
                 text=[seleccion],
                 textposition='top right',
                 name='Estación seleccionada'
