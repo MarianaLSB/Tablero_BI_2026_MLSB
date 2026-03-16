@@ -40,7 +40,7 @@ class EcobiciViz:
     
         leyenda = ""
         for nombre, valor, color in categorias:
-            leyenda += f'<span style="color:{color};">⬛</span> {nombre} ({valor})&nbsp;&nbsp;'
+            leyenda += f'<span style="display:inline-block;width:12px;height:12px;background:{color};border-radius:2px;margin-right:4px;"></span>{nombre} ({valor})&nbsp;&nbsp;'
     
         st.markdown(f"""
         <div style="background:#1e1e1e; padding:15px; border-radius:10px;">
