@@ -52,6 +52,7 @@ class EcobiciViz:
         """, unsafe_allow_html=True)
     
     def render_map(self, df, seleccion, nivel_zoom):
+        df = df.copy()  # <- agrega esta línea
         st.subheader("Mapa de Estaciones EcoBici")
 
         zoom_map = {1: 11, 2: 13, 3: 15, 4: 17}
